@@ -1,0 +1,28 @@
+forum:
+  build: ./NodeBB
+  container_name: forum-nodebb
+  entrypoint: /bin/bash
+  command: -c "npm install && npm start"
+  working_dir: /usr/src/app
+  links:
+    - redis:redis
+  ports:
+    - "4567:4567"
+  environment:
+    # Generating NodeBB environments
+    - url=http://127.0.0.1:4567
+    - port=4567
+    - bind_address=0.0.0.0
+    - secret=YOUR_SECRET_STRINGS
+    - database=redis
+
+    # Overwirte environments in nconf
+    - redis:host=redis
+    - redis:port=6379
+    - redis:password=
+    - redis:database=0
+
+redis:
+  restart: always
+  image: redis:latest
+  container_name: forum-redis
